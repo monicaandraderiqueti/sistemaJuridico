@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JuriGroscon - Clientes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        input {
+            margin: 5px;
+            padding: 8px;
+        }
+
+        button {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Buscar Processo</h2>
+
+<input type="text" id="numero" placeholder="Digite o número">
+<button onclick="buscar()">Buscar</button>
+
+<ul id="resultado"></ul>
+
+<script>
+    async function buscar() {
+        const numero = document.getElementById("numero").value;
+
+        const response = await fetch(http://localhost:8080/processos/buscar/numero?numero=${numero});
+        const dados = await response.json();
+
+        const lista = document.getElementById("resultado");
+        lista.innerHTML = "";
+
+        dados.forEach(p => {
+            const item = document.createElement("li");
+            item.innerText = Processo: ${p.nProcesso} | Valor: ${p.valorAtual};
+            lista.appendChild(item);
+        });
+    }
+</script>
+
+</body>
+</html>

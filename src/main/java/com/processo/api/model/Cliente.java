@@ -1,11 +1,12 @@
 package com.processo.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
 
     @Entity //mostra que é entidade (vira tabela)
-    @Table(name="tbClientes")
+    @Table(name="tb_clientes")
     public class Cliente {
 
         @Id //chave primária
@@ -14,6 +15,7 @@ import java.util.List;
         private Long id;
 
         @OneToMany(mappedBy = "cliente")
+        @JsonIgnore
         private List<Processo> processos;
 
         //identificadores

@@ -19,6 +19,7 @@ public abstract class Processo {
     protected LocalDate dataInicio;
     protected String dadosVeiculo;
     protected double valorAtual;
+    @Column(name = "n_processo")
     protected int nProcesso;
     protected int nVara;
     protected String cidade;
@@ -26,7 +27,7 @@ public abstract class Processo {
     protected String resumo;
     protected String observacoes;
     protected String situacaoAtual;
-    protected boolean passivel; //de receber(sim, talvez, não)
+    protected String passivel; //de receber(sim, talvez, não)
 
     //construtor vazio
     public Processo() {
@@ -38,8 +39,12 @@ public abstract class Processo {
         this.nProcesso = nProcesso;
         this.valorAtual = valorAtual;
     }
-    //getters e setters
 
+    public String gerarResumo() {
+        return "Processo nº " + nProcesso;
+    }
+
+    //getters e setters
     public Long getId() {
         return id;
     }
@@ -136,11 +141,11 @@ public abstract class Processo {
         this.situacaoAtual = situacaoAtual;
     }
 
-    public boolean isPassivel() {
+    public String getPassivel() {
         return passivel;
     }
 
-    public void setPassivel(boolean passivel) {
+    public void setPassivel(String passivel) {
         this.passivel = passivel;
     }
 }

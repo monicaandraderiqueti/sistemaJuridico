@@ -6,14 +6,13 @@ import com.processo.api.model.ProcessoInadimplencia;
 import com.processo.api.repository.ClienteRepository;
 import com.processo.api.repository.ProcessoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/processos")
+@CrossOrigin(origins = "*")
 public class ProcessoController {
     @Autowired
     private ProcessoRepository repository;
@@ -42,8 +41,19 @@ public class ProcessoController {
 
         return "Processo salvo com sucesso!";
     }
+
     @GetMapping("/listar-tudo")
     public List<Processo> listarTudo() {
         return repository.findAll();
+    };
+
+    @GetMapping("/buscar/numero")
+    public List<Processo> buscarPorNumero(@RequestParam String numero) {
+        return repository.buscarPorNumero(numero);
+    }
+
+    @GetMapping("/buscar/cliente")
+    public List<Processo> buscarPorCliente(@RequestParam String nome) {
+        return repository.buscarPorNomeCliente(nome);
     }
 }
