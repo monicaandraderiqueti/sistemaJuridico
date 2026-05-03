@@ -1,24 +1,24 @@
-⚖️ JuriGroscon - Sistema Jurídico Groscon
-📌 Descrição
+JuriGroscon - Sistema Jurídico Groscon
 
+- Descrição
 O Sistema Jurídico Groscon foi desenvolvido com o objetivo de centralizar e gerenciar informações jurídicas relacionadas a processos movidos por uma empresa de 
 consórcios contra clientes inadimplentes. A aplicação permite organizar os dados de forma estruturada, facilitando o acompanhamento dos processos e proporcionando 
 uma visão mais clara sobre o andamento das ações judiciais.
 Além disso, o sistema contribui para a tomada de decisões por meio da análise das informações registradas.
 
-🎯 Objetivo
+- Objetivo
 Centralizar dados jurídicos em um único sistema
 Facilitar o gerenciamento de processos
 Melhorar a visualização e análise das informações
 Apoiar decisões com base nos dados disponíveis
 
-⚙️ Funcionalidades
+- Funcionalidades
 O sistema permite ao usuário
-✔️ Adicionar novos processos
-✔️ Atualizar informações de processos
-✔️ Visualizar processos cadastrados
-✔️ Gerenciar clientes vinculados aos processos
-📊 Análise de Dados (B.I)
+- Adicionar novos processos
+- Atualizar informações de processos
+- Visualizar processos cadastrados
+- Gerenciar clientes vinculados aos processos
+- Análise de Dados (B.I)
 
 O sistema também prevê a geração de gráficos no estilo Business Intelligence (B.I), permitindo:
 - Visualização de processos por status
@@ -27,7 +27,7 @@ O sistema também prevê a geração de gráficos no estilo Business Intelligenc
 - Apoio visual para tomada de decisão
 (Obs: funcionalidade em desenvolvimento ou integração com frontend)
 
-🚀 Tecnologias Utilizadas
+- Tecnologias Utilizadas
 Java 17
 Spring Boot
 Spring Data JPA
@@ -35,13 +35,13 @@ Hibernate
 Banco de Dados H2 (em memória)
 Maven
 
-📂 Estrutura do Projeto
+- Estrutura do Projeto
 api/
 ├── controller   → endpoints da API
 ├── model        → entidades (Cliente, Processo)
 ├── repository   → acesso ao banco de dados
 
-🗄️ Banco de Dados
+- Banco de Dados
 O sistema utiliza o banco H2 em memória.
 Acesse o console em: http://localhost:8080/h2-console
 Configuração:
@@ -49,7 +49,7 @@ JDBC URL: jdbc:h2:mem:sistemaJuridico2
 Usuário: sa
 Senha: (vazio)
 
-💻 Frontend
+- Frontend
 O projeto possui uma interface em HTML e JavaScript para consumo da API.
 Acesse em: http://localhost:8080/index.html
 
