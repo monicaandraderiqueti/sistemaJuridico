@@ -45,7 +45,9 @@ public class ProcessoController {
     @GetMapping("/listar-tudo")
     public List<Processo> listarTudo() {
         return repository.findAll();
-    };
+    }
+
+    ;
 
     @GetMapping("/buscar/numero")
     public List<Processo> buscarPorNumero(@RequestParam String numero) {
@@ -56,4 +58,38 @@ public class ProcessoController {
     public List<Processo> buscarPorCliente(@RequestParam String nome) {
         return repository.buscarPorNomeCliente(nome);
     }
+
+    @PostMapping
+    public Processo salvar(@RequestBody Processo processo) {
+        if (processo.getSituacaoAtual() == null) {
+            processo.setSituacaoAtual("Aberto");
+        }
+        return repository.save(processo);
+    }
+
+    @GetMapping("/{id}")
+    public Processo buscarPorId(@PathVariable Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    @PutMapping("/{id}/encerrar")
+    public Processo encerrar(@PathVariable Long id) {
+        Processo p = repository.findById(id).orElseThrow();
+        p.setSituacaoAtual("Encerrado");
+        return repository.save(p);
+    }
+
+    @PutMapping("/{id}")
+    public Processo atualizar(@PathVariable Long id, @RequestBody Processo novo) {
+        Processo p = repository.findById(id).orElseThrow();
+
+        p.setnProcesso(novo.getnProcesso());
+        p.setCidade(novo.getCidade());
+        p.setValorAtual(novo.getValorAtual());
+        p.setSituacaoAtual(novo.getSituacaoAtual());
+
+        return repository.save(p);
+    }
+
+
 }

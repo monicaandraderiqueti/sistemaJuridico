@@ -1,65 +1,457 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>JuriGroscon - Clientes</title>
+    <meta charset="UTF-8">
+    <title>Sistema Jurídico - Groscon</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
+
+        .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.logo img {
+    width: 40px;
+    border-radius: 8px;
+}
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f6f9;
         }
 
-        table {
+        .container {
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: #0f172a;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 30px;
+        }
+
+        .sidebar button {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: none;
+            background: #1e293b;
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
             text-align: left;
         }
 
-        th {
-            background-color: #f2f2f2;
+        .sidebar button:hover {
+            background: #2563eb;
         }
 
-        input {
+        /* MAIN */
+        .main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        /* CARDS */
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* TABELA BONITA */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 10px;
+            color: #64748b;
+        }
+
+        .table td {
+            padding: 12px;
+        }
+
+        .table tr {
+            border-bottom: 1px solid #eee;
+        }
+
+        /* INPUT */
+        input, select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
             margin: 5px;
-            padding: 8px;
         }
 
-        button {
-            padding: 8px 12px;
+        button.primary {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
             cursor: pointer;
+        }
+
+        /* DASHBOARD GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
     </style>
 </head>
+
 <body>
 
-<h2>Buscar Processo</h2>
+<div class="container">
 
-<input type="text" id="numero" placeholder="Digite o número">
-<button onclick="buscar()">Buscar</button>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSbG6bxtc3hQDWObcYzAuFzf3M0i9wtZGFog&s">
+            <span>JuriGROSCON</span>
+        </div>
 
-<ul id="resultado"></ul>
+        <button onclick="mostrar('dashboard')">📊 Dashboard</button>
+        <button onclick="mostrar('processos')">📄 Processos</button>
+        <button onclick="mostrar('novo')">➕ Novo Processo</button>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="tela">
+            <div class="card">
+                <h2>Painel</h2>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <canvas id="graficoPizza"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>Processos por Cidade</h3>
+                    <div id="cidades"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Todos os Processos</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Número</th>
+                        <th>Cliente</th>
+                        <th>Status</th>
+                        <th>Valor</th>
+                    </tr>
+                    </thead>
+                    <tbody id="listaDashboard"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PROCESSOS -->
+        <div id="processos" class="tela" style="display:none;">
+            <div class="card">
+                <h2>Buscar Processo</h2>
+                <input id="numero" placeholder="Número do processo">
+                <button class="primary" onclick="buscar()">Buscar</button>
+            </div>
+
+            <div class="card">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Número</th>
+                        <th>Cliente</th>
+                        <th>Cidade</th>
+                        <th>Status</th>
+                        <th>Valor</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tabela"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- NOVO PROCESSO -->
+        <div id="novo" class="tela" style="display:none;">
+            <div class="card">
+                <h2>Novo Processo</h2>
+
+                <input id="nProcesso" placeholder="Número"><br>
+                <input id="cliente" placeholder="Cliente"><br>
+                <input id="cidade" placeholder="Cidade"><br>
+                <input id="valor" placeholder="Valor"><br>
+
+                <button class="primary" onclick="salvar()">Salvar</button>
+            </div>
+        </div>
+
+        <div id="editar" class="tela" style="display:none;">
+            <div class="card">
+                <h2>Editar Processo</h2>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+
+                    <input id="e_numero" placeholder="Número do processo">
+                    <input id="e_cliente" placeholder="Cliente">
+
+                    <input id="e_cidade" placeholder="Cidade">
+                    <input id="e_valor" placeholder="Valor">
+
+                    <select id="e_status">
+                        <option>Aberto</option>
+                        <option>Encerrado</option>
+                    </select>
+
+                </div>
+
+                <br>
+
+                <button class="primary" onclick="salvarEdicao()">Salvar Alterações</button>
+                <button onclick="mostrar('processos')">Cancelar</button>
+            </div>
+        </div>
+
+        <div id="detalhe" class="tela" style="display:none;">
+
+            <div class="card">
+                <h2>Detalhes do Processo</h2>
+
+                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+
+                    <!-- COLUNA ESQUERDA -->
+                    <div style="flex: 1; min-width: 300px;">
+                        <p><b>Número do processo</b><br><span id="d_numero"></span></p>
+                        <p><b>Cliente</b><br><span id="d_cliente"></span></p>
+                        <p><b>Comarca</b><br><span id="d_cidade"></span></p>
+                        <p><b>Status</b><br><span id="d_status"></span></p>
+                        <p><b>Valor</b><br><span id="d_valor"></span></p>
+                    </div>
+
+                    <!-- COLUNA DIREITA -->
+                    <div style="flex: 1; min-width: 300px;">
+                        <p><b>Resumo do Caso</b><br><span id="d_resumo"></span></p>
+                        <p><b>Observações</b><br><span id="d_obs"></span></p>
+                    </div>
+
+                </div>
+
+                <br>
+
+                <button onclick="mostrar('processos')">Voltar</button>
+                <button onclick="editar(processoAtual.id)">Editar</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
 
 <script>
-    async function buscar() {
+    const API = "http://localhost:8080/processos";
+
+    /* TROCAR TELA */
+    function mostrar(tela) {
+    console.log("Trocando para:", tela);
+
+    document.querySelectorAll(".tela").forEach(t => {
+        t.style.display = "none";
+    });
+
+    const el = document.getElementById(tela);
+
+    if (!el) {
+        console.error("Tela não encontrada:", tela);
+        return;
+    }
+
+    el.style.display = "block";
+
+    if (tela === "dashboard") carregarDashboard();
+    if (tela === "processos") listar();
+}
+
+    /* LISTAR */
+    function listar() {
+        fetch(API)
+        .then(r => r.json())
+        .then(dados => preencherTabela(dados));
+    }
+
+    /* BUSCAR */
+    function buscar() {
         const numero = document.getElementById("numero").value;
 
-        const response = await fetch(http://localhost:8080/processos/buscar/numero?numero=${numero});
-        const dados = await response.json();
+        fetch(`${API}/buscar/numero?numero=${numero}`)
+        .then(r => r.json())
+        .then(dados => preencherTabela(dados));
+    }
 
-        const lista = document.getElementById("resultado");
-        lista.innerHTML = "";
+    /* PREENCHER TABELA */
+    function preencherTabela(lista) {
+    const tbody = document.getElementById("tabela");
+    tbody.innerHTML = "";
 
-        dados.forEach(p => {
-            const item = document.createElement("li");
-            item.innerText = Processo: ${p.nProcesso} | Valor: ${p.valorAtual};
-            lista.appendChild(item);
+    lista.forEach(p => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${p.nProcesso}</td>
+                <td>${p.cliente?.nomeCliente || '-'}</td>
+                <td>${p.cidade || '-'}</td>
+                <td>${p.situacaoAtual || '-'}</td>
+                <td>R$ ${p.valorAtual}</td>
+                <td>
+    <button onclick="verDetalhe(${p.id})">👁️</button>
+    <button onclick="editar(${p.id})">✏️</button>
+</td>
+            </tr>
+        `;
+    });
+}
+
+    /* SALVAR */
+    function salvar() {
+        const processo = {
+            nProcesso: document.getElementById("nProcesso").value,
+            cidade: document.getElementById("cidade").value,
+            valorAtual: document.getElementById("valor").value,
+            situacaoAtual: "Aberto"
+        };
+
+        fetch(API, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(processo)
+        })
+        .then(() => {
+            alert("Salvo!");
+            mostrar("processos");
         });
     }
+
+    /* DASHBOARD */
+    function carregarDashboard() {
+        fetch(API)
+        .then(r => r.json())
+        .then(lista => {
+
+            // TABELA
+            const dash = document.getElementById("listaDashboard");
+            dash.innerHTML = "";
+
+            let aberto = 0, encerrado = 0;
+
+            lista.forEach(p => {
+                dash.innerHTML += `
+                    <tr>
+                        <td>${p.nProcesso}</td>
+                        <td>${p.cliente?.nomeCliente || '-'}</td>
+                        <td>${p.situacaoAtual}</td>
+                        <td>R$ ${p.valorAtual}</td>
+                    </tr>
+                `;
+
+                if(p.situacaoAtual === "Aberto") aberto++;
+                else encerrado++;
+            });
+
+            // GRÁFICO
+            new Chart(document.getElementById("graficoPizza"), {
+                type: 'doughnut',
+                data: {
+                    labels: ["Abertos", "Encerrados"],
+                    datasets: [{
+                        data: [aberto, encerrado]
+                    }]
+                }
+            });
+        });
+    }
+
+let processoAtual = null;
+
+function verDetalhe(id) {
+    console.log("CLICOU", id);
+
+    fetch(`${API}/${id}`)
+    .then(r => r.json())
+    .then(p => {
+        console.log("DADOS:", p);
+
+        document.getElementById("d_numero").innerText = p.nProcesso;
+
+        mostrar("detalhe");
+    });
+}
+
+function encerrarProcesso() {
+    fetch(`${API}/${processoAtual.id}/encerrar`, {
+        method: "PUT"
+    })
+    .then(() => {
+        alert("Processo encerrado!");
+        mostrar("processos");
+    });
+}
+
+    function editar(id) {
+    fetch(`${API}/${id}`)
+    .then(r => r.json())
+    .then(p => {
+        processoAtual = p;
+
+        document.getElementById("e_numero").value = p.nProcesso;
+        document.getElementById("e_cliente").value = p.cliente?.nomeCliente || '';
+        document.getElementById("e_cidade").value = p.cidade || '';
+        document.getElementById("e_valor").value = p.valorAtual;
+        document.getElementById("e_status").value = p.situacaoAtual;
+
+        mostrar("editar");
+    });
+}
+
+function salvarEdicao() {
+    const processo = {
+        nProcesso: document.getElementById("e_numero").value,
+        cidade: document.getElementById("e_cidade").value,
+        valorAtual: document.getElementById("e_valor").value,
+        situacaoAtual: document.getElementById("e_status").value
+    };
+
+    fetch(`${API}/${processoAtual.id}`, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(processo)
+    })
+    .then(() => {
+        alert("Atualizado com sucesso!");
+        mostrar("processos");
+        listar();
+    });
+}
+
 </script>
 
 </body>
