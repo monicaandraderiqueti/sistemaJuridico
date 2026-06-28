@@ -6,9 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity // é entidade
-@Inheritance(strategy = InheritanceType.JOINED) // Necessário porque a classe é abstrata e tem "filhas"
+@Table(name="tb_processo")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Necessário porque a classe é abstrata e tem "filhas"
 // Inheritance cria uma tabela separada para "mãe" e outras separadas p/ as "filhas"
-@DiscriminatorColumn(name = "tipo_processo") // ajuda o banco a diferenciar os tipos de processo
+@DiscriminatorColumn(name = "tipo_processo", discriminatorType = DiscriminatorType.STRING) // ajuda o banco a diferenciar os tipos de processo
 public abstract class Processo {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

@@ -5,9 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="tb_processos_Inadimplencia")
 @DiscriminatorValue("INADIMPLENCIA")
 public class ProcessoInadimplencia extends Processo {
+
 
     // construtor vazio obrigatório para o Hibernate
     public ProcessoInadimplencia() {
