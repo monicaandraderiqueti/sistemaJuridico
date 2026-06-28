@@ -7,12 +7,13 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="tb_processos_Inadimplencia")
 @DiscriminatorValue("INADIMPLENCIA")
-public class ProcessoInadimplencia extends Processo{
-    //construtor vazio
+public class ProcessoInadimplencia extends Processo {
+
+    // construtor vazio obrigatório para o Hibernate
     public ProcessoInadimplencia() {
     }
 
-    //construtor p/ controller/testes
+    // construtor p/ controller/testes que repassa os dados para a classe mãe (super)
     public ProcessoInadimplencia(Cliente cliente, int nProcesso, double valorAtual) {
         super(cliente, nProcesso, valorAtual);
     }
@@ -21,5 +22,4 @@ public class ProcessoInadimplencia extends Processo{
     public String gerarResumo() {
         return "[INADIMPLÊNCIA] Processo nº " + nProcesso + " - Valor: " + valorAtual;
     }
-
 }

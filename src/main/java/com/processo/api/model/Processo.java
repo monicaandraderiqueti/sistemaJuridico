@@ -1,20 +1,23 @@
 package com.processo.api.model;
 
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
-@Entity //é entidade
+@Entity // é entidade
 @Inheritance(strategy = InheritanceType.JOINED) // Necessário porque a classe é abstrata e tem "filhas"
-//Inheritance cria uma tabela separada para "mãe" e outras separadas p/ as "filhas"
-@DiscriminatorColumn(name = "tipo_processo") //ajuda o banco a diferenciar os tipos de processo
+// Inheritance cria uma tabela separada para "mãe" e outras separadas p/ as "filhas"
+@DiscriminatorColumn(name = "tipo_processo") // ajuda o banco a diferenciar os tipos de processo
 public abstract class Processo {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    protected  Long id;
+    protected Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER) //muitos pra um (um cliente pode ter vários processos)
-    @JoinColumn(name = "cliente_id", referencedColumnName = "id")
-    protected Cliente cliente; //Ligação direta com a classe Cliente
+    // adicionado o cascade para salvar o cliente automaticamente ao salvar um processo
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cliente_id")
+    protected Cliente cliente; // Ligação direta com a classe Cliente
 
     protected LocalDate dataInicio;
     protected String dadosVeiculo;
@@ -27,13 +30,13 @@ public abstract class Processo {
     protected String resumo;
     protected String observacoes;
     protected String situacaoAtual;
-    protected String passivel; //de receber(sim, talvez, não)
+    protected String passivel; // de receber(sim, talvez, não)
 
-    //construtor vazio
+    // construtor vazio
     public Processo() {
     }
 
-    //construtor
+    // construtor
     public Processo(Cliente cliente, int nProcesso, double valorAtual) {
         this.cliente = cliente;
         this.nProcesso = nProcesso;
@@ -42,6 +45,21 @@ public abstract class Processo {
 
     public String gerarResumo() {
         return "Processo nº " + nProcesso;
+    }
+
+    @JsonProperty("nomeCliente")
+    public void setNomeCliente(String Nome) {
+        if (this.cliente == null) {
+            this.cliente = new Cliente();
+        }
+
+        this.cliente.setNome(Nome);
+    }
+
+    // Quando o Java enviar o processo para o front-end, ele extrai o nome do Cliente e manda limpo
+    @JsonProperty("nomeCliente")
+    public String getNomeCliente() {
+        return this.cliente != null ? this.cliente.getNome() : "Sem Nome";
     }
 
     //getters e setters

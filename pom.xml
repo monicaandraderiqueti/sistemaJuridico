@@ -10,6 +10,7 @@
 	</parent>
 
 
+
 	<groupId>com.processo</groupId>
 	<artifactId>api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -21,10 +22,15 @@
 	</properties>
 
 	<dependencies>
-		<!-- Banco de Dados H2 (Memória) -->
+	<!-- Ferramenta de validação que vamos usar para proteger o banco -->
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-validation</artifactId>
+	</dependency>
+
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -34,7 +40,7 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
-		<!-- Starter Web Padrão (Essencial para o H2-Console funcionar) -->
+		<!-- Starter Web Padrão -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>

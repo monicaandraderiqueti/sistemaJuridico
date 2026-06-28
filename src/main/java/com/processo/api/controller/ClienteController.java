@@ -2,6 +2,8 @@ package com.processo.api.controller;
 
 import com.processo.api.model.Cliente; //traz a classe Cliente
 import com.processo.api.repository.ClienteRepository; //traz o repositório ("conversa" com o banco)
+import com.processo.api.service.ClienteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +17,16 @@ import java.util.List; //para retornar a lista de clientes
 public class ClienteController {
 
     @Autowired
-    private ClienteRepository repository; //dá acesso ao banco
+    private ClienteService service;
 
     @GetMapping //ao acessar o link busca os clientes e retorna a lista
     public List<Cliente> listar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @PostMapping //transforma em objeto cliente, salva no banco e retorna cliente salvo
-    public ResponseEntity<Cliente> salvar(@RequestBody Cliente cliente) {
-        Cliente salvo = repository.save(cliente);
+    public ResponseEntity<Cliente> salvar(@Valid @RequestBody Cliente cliente) {
+        Cliente salvo = service.salvar(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
